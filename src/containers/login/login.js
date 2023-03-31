@@ -1,39 +1,26 @@
 import React, { useState } from "react";
 import { Login } from "../../components";
+import { userlogin, userloading } from "../../storage";
 
-async function login(username, password) {
-  var response;
+import { LoginRequest } from "../../api"; // we can create all apis inside that folder
+import { useSelector, useDispatch } from "react-redux";
 
-  const userData = {
-    "username": username,
-    "password": password,
-  };
-
-  await fetch("http://localhost:5000/api/v1/users/", {
-    method: "POST",
-    body: JSON.stringify(userData),
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .catch((err) => (response = err))
-    .then((data) => {
-      response = data;
-    });
-
-  return response;
+function timeout(delay) {
+  return new Promise((res) => setTimeout(res, delay));
 }
 
 export default function LoginContainer({ ...restProps }) {
+  const state = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
- 
 
   return (
     <Login {...restProps}>
       <Login.Form>
         <Login.FormInner>
-          <Login.Label>User Name</Login.Label>
+          <Login.Label>{state.isLoading ? "yes" : "no"}</Login.Label>
           <Login.Input
             onChanged={(evt) => {
               if (evt.target.value.length >= 8) {
@@ -45,7 +32,7 @@ export default function LoginContainer({ ...restProps }) {
         </Login.FormInner>
 
         <Login.FormInner>
-          <Login.Label>Password</Login.Label>
+          <Login.Label>{state.error}</Login.Label>
           <Login.Input
             onChanged={(evt) => {
               if (evt.target.value.length >= 8) {
@@ -61,10 +48,19 @@ export default function LoginContainer({ ...restProps }) {
           <Login.Button
             disabled={userName === "" || password === ""}
             onPress={async () => {
-              const res = await login(userName, password);
-              
+              dispatch(userloading()); // set state to loading to show a visual response to user
+              await timeout(1000);
+              //TODO:fetch api data and send to login
 
-              console.log(res);
+              dispatch(
+                userlogin({
+                  success: true,
+                  data: {
+                    user: "HS",
+                    about: "adhasdjas",
+                  },
+                })
+              );
             }}
           >
             Login
