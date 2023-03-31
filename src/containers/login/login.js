@@ -32,7 +32,7 @@ export default function LoginContainer({ ...restProps }) {
         </Login.FormInner>
 
         <Login.FormInner>
-          <Login.Label>{state.error}</Login.Label>
+          <Login.Label>{state.user}</Login.Label>
           <Login.Input
             onChanged={(evt) => {
               if (evt.target.value.length >= 8) {
@@ -49,14 +49,14 @@ export default function LoginContainer({ ...restProps }) {
             disabled={userName === "" || password === ""}
             onPress={async () => {
               dispatch(userloading()); // set state to loading to show a visual response to user
-              await timeout(1000);
+              await timeout(5000);
               //TODO:fetch api data and send to login
 
               dispatch(
                 userlogin({
                   success: true,
                   data: {
-                    user: "HS",
+                    user: "Yasin kömür",
                     about: "adhasdjas",
                   },
                 })

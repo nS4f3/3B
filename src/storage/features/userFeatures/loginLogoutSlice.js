@@ -29,14 +29,16 @@ const loginLogoutSlice = createSlice({
             isLoading: false,
             user: response.data.user,
             error: null,
+            
           },
         };
       },
     },
 
     loading: {
-      reducer: (state, _) => {
+      reducer: (state, action) => {
         state.isLoading = true;
+        return state;
       },
     },
 
